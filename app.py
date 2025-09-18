@@ -54,3 +54,5 @@ def chat():
 
 if __name__ == "__main__":
     app.run(debug=True)
+    print("running app")
+#added new features
