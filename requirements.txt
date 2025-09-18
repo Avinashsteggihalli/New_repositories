@@ -1,0 +1,7 @@
+flask
+openai
+python-dotenv
+azure-ai-vision
+requests
+streamlit
+Pillow

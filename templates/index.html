@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce AI Assistant</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">E-Commerce AI Assistant</h1>
+        <form method="post">
+            <div class="mb-3">
+                <label for="user_input" class="form-label">Enter your input:</label>
+                <input type="text" class="form-control" id="user_input" name="user_input" required>
+            </div>
+            <div class="mb-3">
+                <label for="feature" class="form-label">Select Feature:</label>
+                <select class="form-select" id="feature" name="feature">
+                    <option value="qa" {% if feature == 'qa' %}selected{% endif %}>Q&A</option>
+                    <option value="summarize" {% if feature == 'summarize' %}selected{% endif %}>Summarization</option>
+                    <option value="image" {% if feature == 'image' %}selected{% endif %}>Image Generation</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        {% if response %}
+        <div class="alert alert-info mt-4">
+            <strong>AI Response:</strong> {{ response }}
+        </div>
+        {% endif %}
+        {% if image_url %}
+        <div class="mt-4">
+            <img src="{{ image_url }}" alt="Generated Image" class="img-fluid"/>
+        </div>
+        {% endif %}
+        <div class="mt-5 text-muted">
+            <small><b>{{ privacy_notice }}</b></small>
+        </div>
+        <div class="mt-2">
+            <small class="text-danger" style="background-color:#ffe6e6; padding:4px 8px; border-radius:4px;">AI generated content, may have errors.</small>
+        </div>
+    </div>
+    <!-- Chatbot floating icon -->
+    <div id="chatbotIcon" style="position:fixed;bottom:24px;right:32px;z-index:10000;cursor:pointer;">
+        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" alt="Chatbot" width="56" height="56" onclick="showChatbotPopup()">
+    </div>
+    <div id="chatbotPopup" style="display:none; position:fixed; bottom:80px; right:40px; z-index:10001; width:370px; max-width:95vw;">
+        <div style="position:relative;">
+            <button onclick="closeChatbotPopup()" style="position:absolute;top:8px;right:8px;z-index:2;background:#fff;border:none;font-size:22px;line-height:1;border-radius:50%;width:32px;height:32px;box-shadow:0 1px 4px #ccc;">&times;</button>
+            <iframe src="/chat" style="width:100%;height:480px;border:none;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.18);"></iframe>
+        </div>
+    </div>
+    <script>
+        function showChatbotPopup() {
+            document.getElementById('chatbotPopup').style.display = 'block';
+        }
+        function closeChatbotPopup() {
+            document.getElementById('chatbotPopup').style.display = 'none';
+        }
+        // Close popup when clicking outside
+        document.addEventListener('mousedown', function(event) {
+            var popup = document.getElementById('chatbotPopup');
+            var icon = document.getElementById('chatbotIcon');
+            if (popup.style.display === 'block' && !popup.contains(event.target) && !icon.contains(event.target)) {
+                popup.style.display = 'none';
+            }
+        });
+        // Listen for close event from inside iframe
+        window.addEventListener('message', function(event) {
+            if(event.data === 'closeChatbot') {
+                document.getElementById('chatbotPopup').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
